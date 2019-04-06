@@ -1,0 +1,40 @@
+textures.png
+size: 375, 75
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cut_grass
+  rotate: false
+  xy: 0, 0
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+path
+  rotate: false
+  xy: 75, 0
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+tile
+  rotate: false
+  xy: 150, 0
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+uncut_grass1
+  rotate: false
+  xy: 225, 0
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+uncut_grass2
+  rotate: false
+  xy: 300, 0
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
