@@ -27,16 +27,15 @@ public class CustomGameMap extends GameMap {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        for (int layer = 0; layer < getLayers(); layer++){
-            for (int row = 0; row < getHeight(); row++){
-                for (int col = 0; col < getWidth(); col++){
+        for (int layer = 0; layer < getLayers(); layer++) {
+            for (int row = 0; row < getHeight(); row++) {
+                for (int col = 0; col < getWidth(); col++) {
                     TileType type = this.getTileTypeByCoordinate(layer, col, row);
-                    if (type !=null)
+                    if (type != null)
                         batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE, row * TileType.TILE_SIZE);
                 }
             }
         }
-
         super.render(camera, batch);
         batch.end();
     }
@@ -44,7 +43,6 @@ public class CustomGameMap extends GameMap {
     @Override
     public void update(float delta) {
         super.update(delta);
-
     }
 
     @Override
@@ -65,6 +63,7 @@ public class CustomGameMap extends GameMap {
         return TileType.getTileTypeById(map[layer][getHeight() - row - 1][column]);
     }
 
+
     @Override
     public int getWidth() {
         return map[0][0].length;
@@ -78,5 +77,16 @@ public class CustomGameMap extends GameMap {
     @Override
     public int getLayers() {
         return map.length;
+    }
+
+    /**
+     * Changing grass type to Cut after running a mower over it
+     * @param layer - grass layer
+     * @param x - x coordinate of mower center
+     * @param y - y coordinate of mower center
+     */
+    @Override
+    public void setTile(int layer, float x, float y){
+        map[layer][getHeight() - (int) (y / TileType.TILE_SIZE)-1][(int) (x / TileType.TILE_SIZE)] = TileType.CUT_GRASS.getId();
     }
 }

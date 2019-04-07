@@ -1,9 +1,12 @@
 package com.bartz.game.world;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.bartz.game.entities.Entity;
 import com.bartz.game.entities.Player;
+import com.bartz.game.entities.Stone;
 
 import java.util.ArrayList;
 
@@ -13,7 +16,8 @@ public abstract class GameMap {
 
     public GameMap(){
         entities = new ArrayList<Entity>();
-        entities.add(new Player(40, 300, this));
+        entities.add(new Stone(300, 600, this));
+        entities.add(new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,this));
     }
 
     public void render(OrthographicCamera cam, SpriteBatch batch){
@@ -49,7 +53,7 @@ public abstract class GameMap {
      */
     public abstract TileType getTileTypeByCoordinate(int layer, int column, int row);
 
-    public boolean doesRectCollideWithMap(float x, float y, int width, int height){
+    /*public boolean doesMowerCollideWithMap(float x, float y, int width, int height){
         if (x < 0 || y <0 || x + width > getPixelWidth() || y + height > getPixelHeight())
             return true;
 
@@ -57,13 +61,35 @@ public abstract class GameMap {
             for (int column = (int) (x / TileType.TILE_SIZE); column < Math.ceil((x + width) / TileType.TILE_SIZE); column++){
                 for (int layer = 0; layer < getLayers(); layer++){
                     TileType type = getTileTypeByCoordinate(layer, column, row);
-                    if (type != null && type.isCollidable())
+                    if (type != null && type.isCollidable()){
                         return true;
+                    }
                 }
             }
         }
         return false;
+    }*/
+
+    public boolean doesMowerCollideWithMap(float x, float y, int width, int height) {
+        if (x + 2 * TileType.TILE_SIZE < 0 || y + TileType.TILE_SIZE < 0 || x > Gdx.graphics.getWidth() || y > Gdx.graphics.getHeight())
+            return true;
+
+        for (int row = (int) (y / TileType.TILE_SIZE); row < Math.ceil((y + height) / TileType.TILE_SIZE); row++) {
+            for (int column = (int) (x / TileType.TILE_SIZE); column < Math.ceil((x + width) / TileType.TILE_SIZE); column++) {
+                for (int layer = 0; layer < getLayers(); layer++) {
+                    TileType type = getTileTypeByCoordinate(layer, column, row);
+                    if (type != null && type.isCollidable()) {
+                        return true;
+                    }
+                }
+            }
+        }return false;
     }
+
+    public boolean doesMowerCollideWithObstacle(float x, float y){
+        return true;
+    }
+
     public abstract int getWidth();
     public abstract int getHeight();
     public abstract int getLayers();
@@ -75,4 +101,6 @@ public abstract class GameMap {
     public int getPixelHeight(){
         return this.getHeight() * TileType.TILE_SIZE;
     }
+
+    public abstract void setTile(int layer, float x, float y);
 }

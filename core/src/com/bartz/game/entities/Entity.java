@@ -8,7 +8,6 @@ public abstract class Entity {
 
     protected Vector2 pos;
     protected EntityType type;
-    protected float velocityY = 0;
     protected GameMap map;
 
     public Entity(float x, float y, EntityType type, GameMap map) {
@@ -25,14 +24,27 @@ public abstract class Entity {
 
     protected void moveX (float amount) {
         float newX = pos.x + amount;
-        if (!map.doesRectCollideWithMap(newX, pos.y, getWidth(), getHeight()))
+        if (!map.doesMowerCollideWithMap(newX, pos.y, getWidth(), getHeight()))
             this.pos.x = newX;
     }
 
     protected void moveY(float amount) {
         float newY = pos.y + amount;
-        if (!map.doesRectCollideWithMap(pos.x, newY, getWidth(), getHeight()))
+        if (!map.doesMowerCollideWithMap(pos.x, newY, getWidth(), getHeight()))
             this.pos.y = newY;
+    }
+
+    protected void move(float amountX, float amountY) {
+        float newX = pos.x + amountX;
+        float newY = pos.y + amountY;
+
+        if (!map.doesMowerCollideWithMap(newX, pos.y, getWidth(),getHeight())){
+            this.pos.x = newX;
+        }
+
+        if (!map.doesMowerCollideWithMap(pos.x, newY,getWidth(),getHeight())) {
+            this.pos.y = newY;
+        }
     }
 
     public Vector2 getPos() {
@@ -58,8 +70,5 @@ public abstract class Entity {
     public int getHeight(){
         return type.getHeight();
     }
-
-
-
 
 }

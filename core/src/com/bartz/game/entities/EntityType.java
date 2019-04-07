@@ -2,11 +2,11 @@ package com.bartz.game.entities;
 
 public enum EntityType {
 
-    PLAYER("player", 367, 208);
+    PLAYER("player", 367, 208),
+    STONE("stone", 300, 300);
 
     private String id;
     private int width, height;
-
 
 
     EntityType(String id, int width, int height) {

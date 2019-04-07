@@ -13,10 +13,7 @@ import com.bartz.game.world.GameMap;
 
 public class Game extends ApplicationAdapter {
 	private SpriteBatch batch;
-	private TextureAtlas textureAtlas2;
-	private Sprite mower;
 	private OrthographicCamera camera;
-	private Vector3 pos;
 
 	private GameMap gameMap;
 
@@ -24,14 +21,12 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 
         batch = new SpriteBatch();
-		textureAtlas2 = new TextureAtlas("mower.txt");
-		mower = textureAtlas2.createSprite("mower");
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		pos = new Vector3(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,0);
 		camera.update();
 
+		//initializing game map
 		gameMap = new CustomGameMap();
 	}
 
