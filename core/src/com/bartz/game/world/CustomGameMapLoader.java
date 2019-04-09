@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class CustomGameMapLoader {
@@ -58,6 +59,7 @@ public class CustomGameMapLoader {
 
             }
         }
+
         return mapData;
     }
 

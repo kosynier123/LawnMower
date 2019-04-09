@@ -3,13 +3,13 @@ package com.bartz.game.world;
 import java.util.HashMap;
 
 public enum TileType {
-    UNCUT_GRASS_DARK(5, false, "Uncut grass"),
-    UNCUT_GRASS_BRIGHT(4, false, "Uncut grass" ),
+    UNCUT_GRASS_DARK(6, false, "Uncut grass"),
+    UNCUT_GRASS_BRIGHT(5, false, "Uncut grass" ),
     CUT_GRASS(1, false, "Cut grass"),
     PATH(2,true, "Stone path"),
-    TERRACE_TILE(3, false, "Terrace tile" );
-    /*STONE(6, true, "Stone" ),
-    FENCE(7, true, " Fence" );*/
+    TERRACE_TILE(4, false, "Terrace tile" );
+    //STONE_TILE(3, true, "Stone" );
+    //FENCE(7, true, " Fence" );*/
 
     public static final int TILE_SIZE = 75;
     private int id;

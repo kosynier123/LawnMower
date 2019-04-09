@@ -14,14 +14,15 @@ public class Player extends Entity {
     private float amountX;
     private float amountY;
     private int health;
+    private static final float SCALE = 0.7f;
 
     public Player(float x, float y, GameMap map) {
         super(x, y, EntityType.PLAYER, map);
         image = new Texture("mower.png");
         sprite = new Sprite(image, getWidth(), getHeight());
         //pos.y = Gdx.graphics.getHeight()/
-        sprite.setScale(0.7f);
         sprite.setOriginCenter();
+        sprite.setScale(SCALE);
         health = 100;
     }
     @Override
@@ -54,10 +55,15 @@ public class Player extends Entity {
             this.pos.x = newX;
         }
 
-        if (!map.doesMowerCollideWithMap(pos.x, newY,(int) sprite.getOriginX(),(int) sprite.getOriginY())) {
+        if (!map.doesMowerCollideWithMap(pos.x, newY,(int) sprite.getOriginX(), (int) sprite.getOriginY())) {
             sprite.setRotation(myDegress);
             this.pos.y = newY;
         }
+        System.out.println(map.doesMowerCollideWithObstacle(pos.x+getWidth()/2*SCALE,
+                pos.y+getHeight()/2*SCALE) || map.doesMowerCollideWithObstacle(pos.x+getWidth()/2*SCALE,
+                pos.y+getHeight()*SCALE) || map.doesMowerCollideWithObstacle(pos.x+getWidth()/2*SCALE,
+                pos.y*SCALE) );
         sprite.setPosition(pos.x, pos.y);
     }
+
 }

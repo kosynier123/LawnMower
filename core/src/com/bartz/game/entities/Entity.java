@@ -22,30 +22,7 @@ public abstract class Entity {
 
     public abstract void render (SpriteBatch batch);
 
-    protected void moveX (float amount) {
-        float newX = pos.x + amount;
-        if (!map.doesMowerCollideWithMap(newX, pos.y, getWidth(), getHeight()))
-            this.pos.x = newX;
-    }
-
-    protected void moveY(float amount) {
-        float newY = pos.y + amount;
-        if (!map.doesMowerCollideWithMap(pos.x, newY, getWidth(), getHeight()))
-            this.pos.y = newY;
-    }
-
-    protected void move(float amountX, float amountY) {
-        float newX = pos.x + amountX;
-        float newY = pos.y + amountY;
-
-        if (!map.doesMowerCollideWithMap(newX, pos.y, getWidth(),getHeight())){
-            this.pos.x = newX;
-        }
-
-        if (!map.doesMowerCollideWithMap(pos.x, newY,getWidth(),getHeight())) {
-            this.pos.y = newY;
-        }
-    }
+    protected abstract void move(float amountX, float amountY);
 
     public Vector2 getPos() {
         return pos;

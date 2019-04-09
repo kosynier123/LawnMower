@@ -1,5 +1,5 @@
 textures.png
-size: 375, 75
+size: 450, 75
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -17,23 +17,30 @@ path
   orig: 75, 75
   offset: 0, 0
   index: -1
-tile
+stone_tile
   rotate: false
   xy: 150, 0
   size: 75, 75
   orig: 75, 75
   offset: 0, 0
   index: -1
-uncut_grass1
+tile
   rotate: false
   xy: 225, 0
   size: 75, 75
   orig: 75, 75
   offset: 0, 0
   index: -1
-uncut_grass2
+uncut_grass1
   rotate: false
   xy: 300, 0
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+uncut_grass2
+  rotate: false
+  xy: 375, 0
   size: 75, 75
   orig: 75, 75
   offset: 0, 0

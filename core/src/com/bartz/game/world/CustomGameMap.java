@@ -4,6 +4,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.bartz.game.entities.Entity;
+import com.bartz.game.entities.obstacles.Stone;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class CustomGameMap extends GameMap {
 
@@ -20,6 +25,13 @@ public class CustomGameMap extends GameMap {
         this.map = data.map;
 
         tiles = TextureRegion.split(new Texture("textures.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
+
+        Random random = new Random();
+
+        obstacles.add(new Stone(300, 600, this, true));
+        obstacles.add(new Stone(500, 100, this, true));
+        obstacles.add(new Stone(800, 300, this, true));
+        obstacles.add(new Stone(300, 70, this, true));
     }
 
     @Override
@@ -32,7 +44,7 @@ public class CustomGameMap extends GameMap {
                 for (int col = 0; col < getWidth(); col++) {
                     TileType type = this.getTileTypeByCoordinate(layer, col, row);
                     if (type != null)
-                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE, row * TileType.TILE_SIZE);
+                        batch.draw(tiles[0][type.getId()-1], col * TileType.TILE_SIZE, row * TileType.TILE_SIZE);
                 }
             }
         }
