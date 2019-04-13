@@ -1,5 +1,9 @@
 package com.bartz.game.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
+import java.util.HashMap;
+
 public enum EntityType {
 
     PLAYER("player", 367, 208),
@@ -26,8 +30,5 @@ public enum EntityType {
     public int getHeight() {
         return height;
     }
-
-
-
 
 }

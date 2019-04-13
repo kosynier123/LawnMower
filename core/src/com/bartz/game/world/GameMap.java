@@ -2,22 +2,24 @@ package com.bartz.game.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bartz.game.entities.Entity;
-import com.bartz.game.entities.EntityType;
 import com.bartz.game.entities.Player;
 import com.bartz.game.entities.obstacles.Stone;
-
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public abstract class GameMap {
 
     protected ArrayList<Entity> entities;
     protected ArrayList<Entity> obstacles;
+
     public GameMap(){
         entities = new ArrayList<Entity>();
         obstacles = new ArrayList<Entity>();

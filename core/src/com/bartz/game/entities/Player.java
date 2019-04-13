@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.bartz.game.world.GameMap;
-
+import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 public class Player extends Entity {
     private Sprite sprite;
@@ -18,9 +20,11 @@ public class Player extends Entity {
 
     public Player(float x, float y, GameMap map) {
         super(x, y, EntityType.PLAYER, map);
-        image = new Texture("mower.png");
-        sprite = new Sprite(image, getWidth(), getHeight());
-        //pos.y = Gdx.graphics.getHeight()/
+        //image = new Texture("mower.png");
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("sprites.txt"));
+        TextureAtlas.AtlasRegion regionMower = atlas.findRegion("mower");
+        sprite = new Sprite(regionMower);
+        //sprite = new Sprite(image, getWidth(), getHeight());
         sprite.setOriginCenter();
         sprite.setScale(SCALE);
         health = 100;
@@ -36,6 +40,7 @@ public class Player extends Entity {
 
     @Override
     public void render(SpriteBatch batch) {
+
         sprite.draw(batch);
     }
 

@@ -4,10 +4,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.bartz.game.entities.Entity;
 import com.bartz.game.entities.obstacles.Stone;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class CustomGameMap extends GameMap {

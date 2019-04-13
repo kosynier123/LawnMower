@@ -1,8 +1,14 @@
 package com.bartz.game.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
+import com.bartz.game.world.CustomGameMap;
 import com.bartz.game.world.GameMap;
+import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 public abstract class Entity {
 
@@ -14,13 +20,14 @@ public abstract class Entity {
         this.pos = new Vector2(x, y);
         this.type = type;
         this.map = map;
+
     }
 
-    public void update(float deltaTime){
+    public void update(float deltaTime) {
         //getting back to set position after going up to be re-think
     }
 
-    public abstract void render (SpriteBatch batch);
+    public abstract void render(SpriteBatch batch);
 
     protected abstract void move(float amountX, float amountY);
 
@@ -32,19 +39,19 @@ public abstract class Entity {
         return type;
     }
 
-    public float getX(){
+    public float getX() {
         return pos.x;
     }
 
-    public float getY(){
+    public float getY() {
         return pos.y;
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return type.getWidth();
     }
 
-    public int getHeight(){
+    public int getHeight() {
         return type.getHeight();
     }
 
