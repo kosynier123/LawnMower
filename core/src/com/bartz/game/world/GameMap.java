@@ -73,23 +73,6 @@ public abstract class GameMap {
      */
     public abstract TileType getTileTypeByCoordinate(int layer, int column, int row);
 
-    /*public boolean doesMowerCollideWithMap(float x, float y, int width, int height){
-        if (x < 0 || y <0 || x + width > getPixelWidth() || y + height > getPixelHeight())
-            return true;
-
-        for (int row = (int) (y / TileType.TILE_SIZE); row < Math.ceil((y + height) / TileType.TILE_SIZE); row++){
-            for (int column = (int) (x / TileType.TILE_SIZE); column < Math.ceil((x + width) / TileType.TILE_SIZE); column++){
-                for (int layer = 0; layer < getLayers(); layer++){
-                    TileType type = getTileTypeByCoordinate(layer, column, row);
-                    if (type != null && type.isCollidable()){
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }*/
-
     public boolean doesMowerCollideWithMap(float x, float y, int width, int height) {
         if (x + 2 * TileType.TILE_SIZE < 0 || y + TileType.TILE_SIZE < 0 || x > Gdx.graphics.getWidth() || y > Gdx.graphics.getHeight())
             return true;
@@ -106,8 +89,30 @@ public abstract class GameMap {
         }return false;
     }
 
+    /**
+     * check if obstacle collide with other obstacle
+     * @param obstacleCircle - obstacle mapped to circle
+     * @return true if obstacles are overlaping
+     */
+    public boolean doesObstacleCollideWithObstacle(Circle obstacleCircle) {
+        if (obstacles.size() == 0)
+            return false;
+        else {
 
+            for (Entity obstacle : obstacles) {
+                Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
+                        obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
+                if (stoneCircle.overlaps(obstacleCircle)){
+                    return true;}
+            }
+        }return false;
+    }
 
+    /**
+     *
+     * @param mowerCircle - area of mower which is responsible for cutting
+     * @return true if mower center area collide with obstacle
+     */
     public boolean doesMowerCollideWithObstacle(Circle mowerCircle) {
         if (obstacles.size() == 0)
             return false;
@@ -119,25 +124,6 @@ public abstract class GameMap {
                 if (stoneCircle.overlaps(mowerCircle)){
                     ((Stone) obstacle).setVisible(false);
                     return true;}
-                /*Array<Vector2> obstacleRect = new Array<Vector2>();
-                obstacleRect.add(new Vector2(obstacle.getX(), obstacle.getY()));
-                obstacleRect.add(new Vector2(obstacle.getX()  + obstacle.getWidth() * 0.4f, obstacle.getY()));
-                obstacleRect.add(new Vector2(obstacle.getX(), obstacle.getY() + obstacle.getHeight() * 0.4f));
-                obstacleRect.add(new Vector2(obstacle.getX()  + obstacle.getWidth() * 0.4f, obstacle.getY() + obstacle.getHeight() * 0.4f));
-                Intersector intersector = new Intersector();
-                if (intersector.isPointInPolygon(obstacleRect, new Vector2(x, y))&& ((Stone)obstacle).isVisible()) {
-                    System.out.println("x " + x + " y " + y + " ob x " + obstacle.getX() + " ob x + w" + (obstacle.getX() + obstacle.getWidth()*0.4) + " ob y " + obstacle.getY() + " ob y + h " + (obstacle.getY() + obstacle.getHeight()*0.4));
-
-                    ((Stone) obstacle).setVisible(false);
-                    //System.exit(0);
-                    return true;
-                }*/
-                //System.out.println("x " + x + " y " + y + " ob x " + obstacle.getX() + " ob x + w" + (obstacle.getX() + obstacle.getWidth()*0.4) + " ob y " + obstacle.getY() + " ob y + h " + (obstacle.getY() + obstacle.getHeight()*0.4));
-                /*if (obstacle.getType() == EntityType.STONE && obstacle.getX() <= x &&
-                        (obstacle.getX() + obstacle.getWidth() * 0.4f) >= x && obstacle.getY() <= y &&
-                        (obstacle.getY() + obstacle.getHeight() * 0.4f) >= y && ((Stone) obstacle).isVisible()) {
-                    ((Stone) obstacle).setVisible(false);
-                    return true;*/
                 }
             }return false;
         }
@@ -146,13 +132,6 @@ public abstract class GameMap {
     public abstract int getHeight();
     public abstract int getLayers();
 
-    public int getPixelWidth(){
-        return this.getWidth() * TileType.TILE_SIZE;
-    }
-
-    public int getPixelHeight(){
-        return this.getHeight() * TileType.TILE_SIZE;
-    }
 
     public abstract void setTile(int layer, float x, float y);
 }

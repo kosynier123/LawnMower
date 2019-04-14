@@ -1,5 +1,6 @@
 package com.bartz.game.world;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ public class CustomGameMap extends GameMap {
     String id;
     String name;
     int[][][] map;
+    private int nrOfStones;
 
     private TextureRegion[][] tiles;
 
@@ -29,11 +31,9 @@ public class CustomGameMap extends GameMap {
         tiles = TextureRegion.split(new Texture("textures.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
 
         Random random = new Random();
+        nrOfStones = random.nextInt(10)+1;
+        generateStones(nrOfStones);
 
-        obstacles.add(new Stone(300, 600, this, true));
-        obstacles.add(new Stone(500, 100, this, true));
-        obstacles.add(new Stone(800, 300, this, true));
-        obstacles.add(new Stone(300, 70, this, true));
     }
 
     @Override
@@ -118,5 +118,27 @@ public class CustomGameMap extends GameMap {
     @Override
     public void setTile(int layer, float x, float y){
         map[layer][getHeight() - (int) (y / TileType.TILE_SIZE)-1][(int) (x / TileType.TILE_SIZE)] = TileType.CUT_GRASS.getId();
+    }
+
+    /**
+     * generate stone obstacles on the map in random position and add them to obstacles array
+     * @param nrOfStones - indicate how many stones have to be created
+     *
+     */
+    private void generateStones(int nrOfStones){
+        Circle stoneCircle;
+        Stone stone;
+        Random random = new Random();
+        for (int i=0; i <= nrOfStones; i++) {
+            System.out.println("stone" + i);
+            //ensure that two stones will not be places in overlaping positions
+            do {
+                stone = new Stone(random.nextInt(Gdx.graphics.getWidth())- 1.5f * TileType.TILE_SIZE,
+                        random.nextInt(Gdx.graphics.getHeight() - (int) (0.5 * TileType.TILE_SIZE)), this, true);
+                stoneCircle =  new Circle(stone.getX() + stone.getWidth()/2,
+                        stone.getY() + stone.getHeight()/2, stone.getWidth()/2*0.4f);
+            } while (doesObstacleCollideWithObstacle(stoneCircle));
+            obstacles.add(stone);
+        }
     }
 }
