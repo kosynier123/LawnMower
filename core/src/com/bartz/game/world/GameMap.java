@@ -5,10 +5,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bartz.game.entities.Entity;
+import com.bartz.game.entities.EntityType;
 import com.bartz.game.entities.Player;
 import com.bartz.game.entities.obstacles.Stone;
 import java.util.ArrayList;
@@ -19,19 +23,22 @@ public abstract class GameMap {
 
     protected ArrayList<Entity> entities;
     protected ArrayList<Entity> obstacles;
+    ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
 
     public GameMap(){
         entities = new ArrayList<Entity>();
         obstacles = new ArrayList<Entity>();
         entities.add(new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,this));
+        shapeRenderer = new ShapeRenderer();
     }
 
     public void render(OrthographicCamera cam, SpriteBatch batch){
         for (Entity obstacle : obstacles) {
             obstacle.render(batch);
         }
-        for (Entity entity : entities) {
-            entity.render(batch);
+        for (Entity player : entities) {
+            player.render(batch);
         }
 
 
@@ -99,31 +106,42 @@ public abstract class GameMap {
         }return false;
     }
 
-    public boolean doesMowerCollideWithObstacle(float x, float y) {
+
+
+    public boolean doesMowerCollideWithObstacle(Circle mowerCircle) {
         if (obstacles.size() == 0)
             return false;
         else {
+
             for (Entity obstacle : obstacles) {
-                Array<Vector2> obstacleRect = new Array<Vector2>();
+                Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
+                        obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
+                if (stoneCircle.overlaps(mowerCircle)){
+                    ((Stone) obstacle).setVisible(false);
+                    return true;}
+                /*Array<Vector2> obstacleRect = new Array<Vector2>();
                 obstacleRect.add(new Vector2(obstacle.getX(), obstacle.getY()));
                 obstacleRect.add(new Vector2(obstacle.getX()  + obstacle.getWidth() * 0.4f, obstacle.getY()));
                 obstacleRect.add(new Vector2(obstacle.getX(), obstacle.getY() + obstacle.getHeight() * 0.4f));
                 obstacleRect.add(new Vector2(obstacle.getX()  + obstacle.getWidth() * 0.4f, obstacle.getY() + obstacle.getHeight() * 0.4f));
                 Intersector intersector = new Intersector();
-                if (intersector.isPointInPolygon(obstacleRect, new Vector2(x, y))) {
+                if (intersector.isPointInPolygon(obstacleRect, new Vector2(x, y))&& ((Stone)obstacle).isVisible()) {
+                    System.out.println("x " + x + " y " + y + " ob x " + obstacle.getX() + " ob x + w" + (obstacle.getX() + obstacle.getWidth()*0.4) + " ob y " + obstacle.getY() + " ob y + h " + (obstacle.getY() + obstacle.getHeight()*0.4));
+
                     ((Stone) obstacle).setVisible(false);
-                    return true;
-                }
-                System.out.println("x " + x + " y " + y + " ob x " + obstacle.getX() + "ob x + w" + (obstacle.getX() + obstacle.getWidth()*0.4) + " ob y" + obstacle.getY() + "ob y + h" + (obstacle.getY() + obstacle.getHeight()*0.4));
-                /*if (obstacle.getType() == EntityType.STONE && obstacle.getX() <= x &&
-                        (obstacle.getX() + obstacle.getWidth() * 0.4) >= x && obstacle.getY() <= y &&
-                        (obstacle.getY() + obstacle.getHeight() * 0.4) >= y) {
-                    ((Stone) obstacle).setVisible(false);
+                    //System.exit(0);
                     return true;
                 }*/
-            }
-        } return false;
-    }
+                //System.out.println("x " + x + " y " + y + " ob x " + obstacle.getX() + " ob x + w" + (obstacle.getX() + obstacle.getWidth()*0.4) + " ob y " + obstacle.getY() + " ob y + h " + (obstacle.getY() + obstacle.getHeight()*0.4));
+                /*if (obstacle.getType() == EntityType.STONE && obstacle.getX() <= x &&
+                        (obstacle.getX() + obstacle.getWidth() * 0.4f) >= x && obstacle.getY() <= y &&
+                        (obstacle.getY() + obstacle.getHeight() * 0.4f) >= y && ((Stone) obstacle).isVisible()) {
+                    ((Stone) obstacle).setVisible(false);
+                    return true;*/
+                }
+            }return false;
+        }
+
     public abstract int getWidth();
     public abstract int getHeight();
     public abstract int getLayers();

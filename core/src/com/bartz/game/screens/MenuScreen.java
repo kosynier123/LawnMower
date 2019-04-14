@@ -21,11 +21,11 @@ public class MenuScreen implements Screen{
     private SpriteBatch batch;
     private ImageButton startButton;
     private ImageButton optionsButton;
-    private ImageButton endButton;
+    private ImageButton exitButton;
     private Image titleImage;
     private Texture startTexture;
     private Texture optionsTexture;
-    private Texture endTexture;
+    private Texture exitTexture;
     private Stage stage;
     private Texture titleTexture;
     private Table table;
@@ -45,41 +45,44 @@ public class MenuScreen implements Screen{
         // initialize textures
         startTexture = new Texture("start.png");
         optionsTexture = new Texture("options.png");
-        endTexture = new Texture("end.png");
+        exitTexture = new Texture("exit.png");
         titleTexture = new Texture("title.png");
 
         // initialize actors
         titleImage = new Image(titleTexture);
         startButton = new ImageButton(new TextureRegionDrawable(startTexture));
         optionsButton = new ImageButton(new TextureRegionDrawable(optionsTexture));
-        endButton = new ImageButton(new TextureRegionDrawable(endTexture));
+        exitButton = new ImageButton(new TextureRegionDrawable(exitTexture));
 
         stage.addActor(titleImage);
-
+        float space = (float) (Gdx.graphics.getHeight() / 2 - startTexture.getHeight() -
+                optionsTexture.getHeight() - exitTexture.getHeight()) / 6;
         // add table to stage and buttons to to table
         stage.addActor(table);
-        table.add(startButton);
-        table.row();
-        table.add(optionsButton);
-        table.row();
-        table.add(endButton);
 
+        //table.add(titleImage).spaceBottom(space);
+        //table.row();
+        table.add(startButton).spaceBottom(space);
+        table.row();
+        table.add(optionsButton).spaceBottom(space);
+        table.row();
+        table.add(exitButton).spaceBottom(space);
         //set titleImage to be 0.8 of screen
         float scale = ((0.8f * titleTexture.getWidth()) / titleTexture.getWidth());
 
         titleImage.setScale(scale);
 
-        titleImage.setPosition(Gdx.graphics.getWidth()/2 - titleTexture.getWidth()*scale/2,
-                Gdx.graphics.getHeight()/4*3 - titleTexture.getHeight()*scale/2);
+        titleImage.setPosition(Gdx.graphics.getWidth()/2 - titleTexture.getWidth() * scale / 2,
+                Gdx.graphics.getHeight() / 4 * 3 - titleTexture.getHeight()*scale / 2);
 
 
 
-        startButton.setBounds(Gdx.graphics.getWidth() / 2 - startTexture.getWidth()/ 2,
+        startButton.setBounds(Gdx.graphics.getWidth() / 2 - startTexture.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2 - startTexture.getHeight() / 2, startTexture.getWidth(), startTexture.getHeight());
         optionsButton.setBounds(Gdx.graphics.getWidth() / 2 - optionsTexture.getWidth()/ 2,
                 Gdx.graphics.getHeight() / 2 -  optionsTexture.getHeight() / 2, optionsTexture.getWidth(), optionsTexture.getHeight());
-        endButton.setBounds(Gdx.graphics.getWidth() / 2 - endTexture.getWidth()/ 2,
-                Gdx.graphics.getHeight() / 2 - endTexture.getHeight() / 2, endTexture.getWidth(), endTexture.getHeight());
+        exitButton.setBounds(Gdx.graphics.getWidth() / 2 - exitTexture.getWidth()/ 2,
+                Gdx.graphics.getHeight() / 2 - exitTexture.getHeight() / 2, exitTexture.getWidth(), exitTexture.getHeight());
     }
 
 
@@ -90,7 +93,6 @@ public class MenuScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         //Clears the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
         table.draw(batch, 1);
         titleImage.draw(batch, 1);
@@ -111,12 +113,12 @@ public class MenuScreen implements Screen{
     public void show() {
         startButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new GameScreen(game, batch, camera));
+                game.setScreen(new GameScreen(game, camera));
                 return true;
             }
         });
 
-        endButton.addListener(new InputListener() {
+        exitButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.exit(0);
                 return true;
@@ -142,5 +144,6 @@ public class MenuScreen implements Screen{
     @Override
     public void dispose(){
         Gdx.input.setInputProcessor(null);
+        batch.dispose();
     }
 }

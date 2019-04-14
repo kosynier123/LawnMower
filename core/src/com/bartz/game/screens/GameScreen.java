@@ -6,7 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bartz.game.LawnMowerGame;
 import com.bartz.game.world.CustomGameMap;
 import com.bartz.game.world.GameMap;
@@ -18,10 +18,10 @@ public class GameScreen extends ScreenAdapter {
     OrthographicCamera camera;
     SpriteBatch batch;
 
-    public GameScreen(LawnMowerGame game, SpriteBatch batch, OrthographicCamera camera) {
+    public GameScreen(LawnMowerGame game, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
-        this.batch = batch;
+        batch = new SpriteBatch();
         gameMap = new CustomGameMap();
     }
 
@@ -41,7 +41,6 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
         gameMap.update(Gdx.graphics.getDeltaTime());
         gameMap.render(camera, batch);
-
     }
 
     @Override

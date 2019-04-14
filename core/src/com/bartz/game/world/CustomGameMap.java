@@ -1,9 +1,13 @@
 package com.bartz.game.world;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.bartz.game.entities.Entity;
 import com.bartz.game.entities.obstacles.Stone;
 
 import java.util.Random;
@@ -42,12 +46,28 @@ public class CustomGameMap extends GameMap {
                 for (int col = 0; col < getWidth(); col++) {
                     TileType type = this.getTileTypeByCoordinate(layer, col, row);
                     if (type != null)
-                        batch.draw(tiles[0][type.getId()-1], col * TileType.TILE_SIZE, row * TileType.TILE_SIZE);
+                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE, row * TileType.TILE_SIZE);
                 }
             }
         }
         super.render(camera, batch);
         batch.end();
+
+        // show collision circles for mower and stones
+        for (Entity entity : entities) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 1, 0, 0.1f);
+            shapeRenderer.circle(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2,
+                    entity.getHeight() * 0.7f / 2);
+            shapeRenderer.end();
+        }
+        for (Entity obstacle : obstacles) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(1, 0, 1, 0.1f);
+            shapeRenderer.circle(obstacle.getX() + obstacle.getWidth() / 2, obstacle.getY() + obstacle.getHeight() / 2,
+                    obstacle.getHeight() * 0.4f / 2);
+            shapeRenderer.end();
+        }
     }
 
     @Override

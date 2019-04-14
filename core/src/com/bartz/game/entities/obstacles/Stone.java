@@ -13,17 +13,16 @@ public class Stone extends Entity {
     private Texture image;
     private Sprite sprite;
     private boolean visible;
-    private static final float SCALE = 0.4f;
+    public static final float SCALE = 0.4f;
 
     public Stone(float x, float y, GameMap map, Boolean visible) {
         super(x, y, EntityType.STONE, map);
         this.visible = visible;
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("sprites.txt"));
-        TextureAtlas.AtlasRegion regionStone = atlas.findRegion("stone");
-        sprite = new Sprite(regionStone);
-        //image = new Texture("stone.png");
-        //sprite = new Sprite(image, getWidth(), getHeight());
-        sprite.setOriginCenter();
+        //TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("sprites.txt"));
+        //TextureAtlas.AtlasRegion regionStone = atlas.findRegion("stone");
+        //sprite = new Sprite(regionStone);
+        image = new Texture("stone.png");
+        sprite = new Sprite(image, getWidth(), getHeight());
         sprite.setScale(SCALE);
         sprite.setPosition(x, y);
     }
