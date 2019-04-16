@@ -2,34 +2,25 @@ package com.bartz.game.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.bartz.game.entities.Entity;
-import com.bartz.game.entities.EntityType;
 import com.bartz.game.entities.Player;
 import com.bartz.game.entities.obstacles.Stone;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public abstract class GameMap {
 
-    protected ArrayList<Entity> entities;
+    protected Player player;
     protected ArrayList<Entity> obstacles;
     ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
 
     public GameMap(){
-        entities = new ArrayList<Entity>();
+        player = new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,this);
         obstacles = new ArrayList<Entity>();
-        entities.add(new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,this));
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -37,20 +28,16 @@ public abstract class GameMap {
         for (Entity obstacle : obstacles) {
             obstacle.render(batch);
         }
-        for (Entity player : entities) {
-            player.render(batch);
-        }
-
-
+        player.render(batch);
     }
+
     public void update (float delta) {
         for (Entity obstacle : obstacles) {
             obstacle.update(delta);
         }
-        for (Entity entity : entities) {
-            entity.update(delta);
-        }
+        player.update(delta);
     }
+
     public abstract void dispose();
 
     /**
@@ -97,15 +84,17 @@ public abstract class GameMap {
     public boolean doesObstacleCollideWithObstacle(Circle obstacleCircle) {
         if (obstacles.size() == 0)
             return false;
+        //ensure that it won't generete at starting position of mower
+        else if (obstacleCircle.contains(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()))
+            return false;
         else {
-
             for (Entity obstacle : obstacles) {
                 Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
                         obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
                 if (stoneCircle.overlaps(obstacleCircle)){
                     return true;}
             }
-        }return false;
+        } return false;
     }
 
     /**
@@ -117,21 +106,26 @@ public abstract class GameMap {
         if (obstacles.size() == 0)
             return false;
         else {
-
             for (Entity obstacle : obstacles) {
                 Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
                         obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
+                System.out.println("overlaps" + stoneCircle.overlaps(mowerCircle));
                 if (stoneCircle.overlaps(mowerCircle)){
-                    ((Stone) obstacle).setVisible(false);
+                    //delete touched stone and reduce mower health
+                    obstacles.remove(obstacle);
+                    player.reduceHealth();
                     return true;}
                 }
-            }return false;
+            } return false;
         }
 
     public abstract int getWidth();
     public abstract int getHeight();
     public abstract int getLayers();
 
+    public Player getPlayer() {
+        return player;
+    }
 
     public abstract void setTile(int layer, float x, float y);
 }

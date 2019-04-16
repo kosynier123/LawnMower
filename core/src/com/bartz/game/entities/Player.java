@@ -27,18 +27,18 @@ public class Player extends Entity {
 
     public Player(float x, float y, GameMap map) {
         super(x, y, EntityType.PLAYER, map);
+
         image = new Texture("mower.png");
-        //TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("sprites.txt"));
-        //TextureAtlas.AtlasRegion regionMower = atlas.findRegion("mower");
-        //sprite = new Sprite(regionMower);
         sprite = new Sprite(image, getWidth(), getHeight());
-        sprite.setOriginCenter();
+
+        //sprite.setOriginCenter();
+        // set the center of rotation to be at center of cutting circle
+        sprite.setOrigin(210f, 104f);
         sprite.setScale(SCALE);
-        //System.out.println("first x (screen) " + Gdx.graphics.getWidth() +" "+ Gdx.graphics.getHeight());
-        //System.out.println("first x " + x + " " + y);
-        health = 100;
+        health = 4;
         shapeRenderer = new ShapeRenderer();
     }
+
     @Override
     public void update(float deltaTime) {
         //get input from phone position
@@ -74,18 +74,32 @@ public class Player extends Entity {
             sprite.setRotation(myDegress);
             this.pos.y = newY;
         }
-        circleMower = new Circle(pos.x + sprite.getOriginX(), pos.y + sprite.getOriginY(), sprite.getHeight()*SCALE/2);
-        /*Array<Vector2> mowerRect = new Array<Vector2>();
-        mowerRect.add(new Vector2(sprite.getX() + sprite.getWidth()*SCALE, sprite.getY() + sprite.getHeight()*SCALE ));
-        mowerRect.add(new Vector2(sprite.getX(), sprite.getY() + sprite.getHeight()*SCALE));
-        mowerRect.add(new Vector2(sprite.getX() + sprite.getWidth()*SCALE, sprite.getY()));
-        mowerRect.add(new Vector2(sprite.getX(), sprite.getY()));*/
-
+        circleMower = new Circle(pos.x + sprite.getOriginX(), pos.y + sprite.getOriginY(),
+                0.8f * sprite.getHeight()*SCALE/2);
         map.doesMowerCollideWithObstacle(circleMower);
+        System.out.println("health " + health);
 
         System.out.println("x " + pos.x + " y " + pos.y);
         sprite.setPosition(pos.x, pos.y);
     }
 
+    public float getCircleMowerX() {
+        return pos.x + sprite.getOriginX();
+}
 
+    public float getCircleMowerY() {
+        return pos.y + sprite.getOriginY();
+    }
+
+    public float getCircleMowerR() {
+        return 0.8f * sprite.getHeight()*SCALE/2;
+    }
+
+    public void reduceHealth(){
+        health -= 1;
+    }
+
+    public int getHealth(){
+        return health;
+    }
 }

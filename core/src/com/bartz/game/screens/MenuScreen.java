@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bartz.game.LawnMowerGame;
 
 public class MenuScreen implements Screen{
@@ -32,12 +34,14 @@ public class MenuScreen implements Screen{
 
     private OrthographicCamera camera;
 
-    public MenuScreen(LawnMowerGame game, Stage stage, SpriteBatch batch, OrthographicCamera camera) {
+    public MenuScreen(LawnMowerGame game, OrthographicCamera camera) {
         //assigns the game we passed to the placeholder
         this.game = game;
-        this.stage = stage;
-        this.batch = batch;
         this.camera = camera;
+
+        batch = new SpriteBatch();
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        Gdx.input.setInputProcessor(stage);
 
         table = new Table();
         table.setFillParent(true);
@@ -56,25 +60,18 @@ public class MenuScreen implements Screen{
 
         stage.addActor(titleImage);
         float space = (float) (Gdx.graphics.getHeight() / 2 - startTexture.getHeight() -
-                optionsTexture.getHeight() - exitTexture.getHeight()) / 6;
+                optionsTexture.getHeight() - exitTexture.getHeight()) / 8;
         // add table to stage and buttons to to table
         stage.addActor(table);
 
-        //table.add(titleImage).spaceBottom(space);
-        //table.row();
+        table.align(Align.center);
+        table.add(titleImage).spaceBottom(2*space);
+        table.row();
         table.add(startButton).spaceBottom(space);
         table.row();
         table.add(optionsButton).spaceBottom(space);
         table.row();
         table.add(exitButton).spaceBottom(space);
-        //set titleImage to be 0.8 of screen
-        float scale = ((0.8f * titleTexture.getWidth()) / titleTexture.getWidth());
-
-        titleImage.setScale(scale);
-
-        titleImage.setPosition(Gdx.graphics.getWidth()/2 - titleTexture.getWidth() * scale / 2,
-                Gdx.graphics.getHeight() / 4 * 3 - titleTexture.getHeight()*scale / 2);
-
 
 
         startButton.setBounds(Gdx.graphics.getWidth() / 2 - startTexture.getWidth() / 2,
@@ -89,7 +86,6 @@ public class MenuScreen implements Screen{
     @Override
     public void render(float deltaTime){
         batch.begin();
-
         Gdx.gl.glClearColor(0,0,0,1);
         //Clears the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -114,6 +110,13 @@ public class MenuScreen implements Screen{
         startButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new GameScreen(game, camera));
+                return true;
+            }
+        });
+
+        optionsButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                //game.setScreen(new EndScreen(game, camera));
                 return true;
             }
         });

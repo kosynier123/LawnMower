@@ -1,12 +1,10 @@
 package com.bartz.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bartz.game.LawnMowerGame;
 import com.bartz.game.world.CustomGameMap;
 import com.bartz.game.world.GameMap;
@@ -26,10 +24,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-        });
-    }
+    public void show() {}
 
     @Override
     public void render(float delta) {
@@ -41,10 +36,19 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
         gameMap.update(Gdx.graphics.getDeltaTime());
         gameMap.render(camera, batch);
+        if (gameMap.getPlayer().getHealth() == 0)
+            game.setScreen(new EndScreen(game, camera));
     }
 
     @Override
     public void hide() {
-        Gdx.input.setInputProcessor(null);
+        dispose();
+    }
+
+    @Override
+    public void dispose() {
+        gameMap.dispose();
+        batch.dispose();
+
     }
 }

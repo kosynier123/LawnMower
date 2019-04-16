@@ -1,7 +1,7 @@
 package com.bartz.game.world;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,20 +54,8 @@ public class CustomGameMap extends GameMap {
         batch.end();
 
         // show collision circles for mower and stones
-        for (Entity entity : entities) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0, 1, 0, 0.1f);
-            shapeRenderer.circle(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2,
-                    entity.getHeight() * 0.7f / 2);
-            shapeRenderer.end();
-        }
-        for (Entity obstacle : obstacles) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(1, 0, 1, 0.1f);
-            shapeRenderer.circle(obstacle.getX() + obstacle.getWidth() / 2, obstacle.getY() + obstacle.getHeight() / 2,
-                    obstacle.getHeight() * 0.4f / 2);
-            shapeRenderer.end();
-        }
+        showDebugCircles(false);
+
     }
 
     @Override
@@ -138,7 +126,28 @@ public class CustomGameMap extends GameMap {
                 stoneCircle =  new Circle(stone.getX() + stone.getWidth()/2,
                         stone.getY() + stone.getHeight()/2, stone.getWidth()/2*0.4f);
             } while (doesObstacleCollideWithObstacle(stoneCircle));
+            //add to obstacles list
             obstacles.add(stone);
         }
     }
+    private void showDebugCircles(boolean setting){
+        if (setting) {
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            // render collision circle for mower
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 1, 0, 0.5f);
+            shapeRenderer.circle(player.getCircleMowerX(), player.getCircleMowerY(), player.getCircleMowerR());
+            shapeRenderer.end();
+            //render collision circle for stones
+            for (Entity obstacle : obstacles) {
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(1, 0, 1, 0.5f);
+                shapeRenderer.circle(obstacle.getX() + obstacle.getWidth() / 2, obstacle.getY() + obstacle.getHeight() / 2,
+                        obstacle.getHeight() * 0.4f / 2);
+                shapeRenderer.end();
+            }
+        }
+    }
+
 }
