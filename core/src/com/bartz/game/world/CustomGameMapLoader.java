@@ -53,7 +53,7 @@ public class CustomGameMapLoader {
                     mapData.map[0][row][col] = TileType.UNCUT_GRASS_BRIGHT.getId();
                 }
                 //set not fully visible cells to be unreachable by player
-                if (row == 0 || col == SIZE_X - 1) {
+                if (row == 0 || row == 1 || row == 2 || col == SIZE_X - 1) {
                     mapData.map[1][row][col] = TileType.PATH.getId();
                 }
 
@@ -62,5 +62,6 @@ public class CustomGameMapLoader {
 
         return mapData;
     }
+
 
 }

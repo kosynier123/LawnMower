@@ -4,11 +4,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.bartz.game.screens.MenuScreen;
-import com.bartz.game.world.GameMap;
 
 public class LawnMowerGame extends Game {
 	private OrthographicCamera camera;
-	private GameMap gameMap;
 
 	@Override
 	public void create () {

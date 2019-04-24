@@ -15,12 +15,14 @@ public class GameScreen extends ScreenAdapter {
     GameMap gameMap;
     OrthographicCamera camera;
     SpriteBatch batch;
+    boolean clicked;
 
     public GameScreen(LawnMowerGame game, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
         batch = new SpriteBatch();
         gameMap = new CustomGameMap();
+        clicked = false;
     }
 
     @Override
@@ -29,17 +31,23 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0, 1, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        gameMap.update(Gdx.graphics.getDeltaTime());
+        //gameMap.update(Gdx.graphics.getDeltaTime());
         gameMap.render(camera, batch);
-        if (gameMap.getPlayer().getHealth() == 0)
-            game.setScreen(new EndScreen(game, camera));
+        if (Gdx.input.isTouched()) clicked = true;
+        //if (!clicked)
+        if (clicked) {
+            gameMap.update(Gdx.graphics.getDeltaTime());
+            if (gameMap.getPlayer().getHealth() == 0)
+                game.setScreen(new EndScreen(game, camera));
+            else if (gameMap.getCompletionPercent() >= 10)
+                game.setScreen(new WinScreen(game, camera));
+        }
     }
-
     @Override
     public void hide() {
         dispose();
@@ -49,6 +57,5 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
         gameMap.dispose();
         batch.dispose();
-
     }
 }

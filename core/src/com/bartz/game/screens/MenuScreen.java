@@ -69,8 +69,8 @@ public class MenuScreen implements Screen{
         table.row();
         table.add(startButton).spaceBottom(space);
         table.row();
-        table.add(optionsButton).spaceBottom(space);
-        table.row();
+        //table.add(optionsButton).spaceBottom(space);
+        //table.row();
         table.add(exitButton).spaceBottom(space);
 
 
@@ -116,7 +116,7 @@ public class MenuScreen implements Screen{
 
         optionsButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                //game.setScreen(new EndScreen(game, camera));
+                //game.setScreen(new WinScreen(game, camera));
                 return true;
             }
         });
@@ -131,7 +131,7 @@ public class MenuScreen implements Screen{
 
     @Override
     public void hide(){
-
+        dispose();
     }
 
     @Override

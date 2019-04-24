@@ -4,27 +4,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.bartz.game.entities.Entity;
 import com.bartz.game.entities.EntityType;
 import com.bartz.game.world.GameMap;
+import com.bartz.game.world.TileType;
 
 public class Stone extends Entity {
     private Texture image;
     private Sprite sprite;
     private boolean visible;
-    public static final float SCALE = 0.4f;
+    private int column;
+    private int row;
 
     public Stone(float x, float y, GameMap map, Boolean visible) {
         super(x, y, EntityType.STONE, map);
         this.visible = visible;
-        //TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("sprites.txt"));
-        //TextureAtlas.AtlasRegion regionStone = atlas.findRegion("stone");
-        //sprite = new Sprite(regionStone);
         image = new Texture("stone.png");
         sprite = new Sprite(image, getWidth(), getHeight());
-        sprite.setScale(SCALE);
+        sprite.setScale(EntityType.STONE.getScale());
         sprite.setPosition(x, y);
+        column = (int) x / TileType.TILE_SIZE;
+        row = (int) y / TileType.TILE_SIZE;
+
     }
 
     @Override
@@ -48,4 +49,11 @@ public class Stone extends Entity {
         if (visible) sprite.draw(batch);
     }
 
+    public int getColumn() {
+        return column;
+    }
+
+    public int getRow() {
+        return row;
+    }
 }

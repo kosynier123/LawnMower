@@ -5,7 +5,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.bartz.game.entities.Entity;
+import com.bartz.game.entities.EntityType;
 import com.bartz.game.entities.Player;
 import com.bartz.game.entities.obstacles.Stone;
 import java.util.ArrayList;
@@ -17,11 +21,13 @@ public abstract class GameMap {
     protected ArrayList<Entity> obstacles;
     ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
+    private int completionPercent;
+    private Intersector intersector;
 
     public GameMap(){
-        player = new Player(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,this);
         obstacles = new ArrayList<Entity>();
         shapeRenderer = new ShapeRenderer();
+        intersector = new Intersector();
     }
 
     public void render(OrthographicCamera cam, SpriteBatch batch){
@@ -61,7 +67,7 @@ public abstract class GameMap {
     public abstract TileType getTileTypeByCoordinate(int layer, int column, int row);
 
     public boolean doesMowerCollideWithMap(float x, float y, int width, int height) {
-        if (x + 2 * TileType.TILE_SIZE < 0 || y + TileType.TILE_SIZE < 0 || x > Gdx.graphics.getWidth() || y > Gdx.graphics.getHeight())
+        if (x + 2* TileType.TILE_SIZE < 0 || y + TileType.TILE_SIZE < 0 || x > Gdx.graphics.getWidth() - 2* TileType.TILE_SIZE || y > Gdx.graphics.getHeight())
             return true;
 
         for (int row = (int) (y / TileType.TILE_SIZE); row < Math.ceil((y + height) / TileType.TILE_SIZE); row++) {
@@ -73,8 +79,9 @@ public abstract class GameMap {
                     }
                 }
             }
-        }return false;
+        } return false;
     }
+
 
     /**
      * check if obstacle collide with other obstacle
@@ -84,13 +91,16 @@ public abstract class GameMap {
     public boolean doesObstacleCollideWithObstacle(Circle obstacleCircle) {
         if (obstacles.size() == 0)
             return false;
-        //ensure that it won't generete at starting position of mower
-        else if (obstacleCircle.contains(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()))
-            return false;
+
+        //ensure that it won't generate at starting position of mower
+        else if (intersector.overlaps(obstacleCircle, new Rectangle(player.getX(), player.getY(),
+                player.getX() + player.getWidth(), player.getY() + player.getHeight())))
+            return true;
         else {
             for (Entity obstacle : obstacles) {
-                Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
-                        obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
+                Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth() / 2,
+                        obstacle.getY() + obstacle.getHeight() / 2,
+                        obstacle.getWidth() / 2 * EntityType.STONE.getScale());
                 if (stoneCircle.overlaps(obstacleCircle)){
                     return true;}
             }
@@ -109,7 +119,7 @@ public abstract class GameMap {
             for (Entity obstacle : obstacles) {
                 Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
                         obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
-                System.out.println("overlaps" + stoneCircle.overlaps(mowerCircle));
+                //System.out.println("overlaps" + stoneCircle.overlaps(mowerCircle));
                 if (stoneCircle.overlaps(mowerCircle)){
                     //delete touched stone and reduce mower health
                     obstacles.remove(obstacle);
@@ -119,13 +129,27 @@ public abstract class GameMap {
             } return false;
         }
 
+    public boolean isObstacleOnTile (int col, int row) {
+        if (obstacles.size() == 0)
+            return false;
+        else {
+            for (Entity obstacle : obstacles) {
+                if (((Stone)obstacle).getColumn() == col && ((Stone)obstacle).getRow() == row)
+                    return true;}
+            }return false;
+        }
+
     public abstract int getWidth();
     public abstract int getHeight();
     public abstract int getLayers();
+    public abstract void countCutableTiles();
+    public abstract int getNrOfCutableTiles();
 
     public Player getPlayer() {
         return player;
     }
 
+
+    public abstract int getCompletionPercent();
     public abstract void setTile(int layer, float x, float y);
 }
