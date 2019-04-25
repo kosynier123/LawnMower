@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.bartz.game.entities.Entity;
 import com.bartz.game.entities.EntityType;
 import com.bartz.game.entities.Player;
@@ -67,7 +66,8 @@ public abstract class GameMap {
     public abstract TileType getTileTypeByCoordinate(int layer, int column, int row);
 
     public boolean doesMowerCollideWithMap(float x, float y, int width, int height) {
-        if (x + 2* TileType.TILE_SIZE < 0 || y + TileType.TILE_SIZE < 0 || x > Gdx.graphics.getWidth() - 2* TileType.TILE_SIZE || y > Gdx.graphics.getHeight())
+        if (x + 2* TileType.TILE_SIZE < 0 || y + TileType.TILE_SIZE < 0 ||
+                x > Gdx.graphics.getWidth() - 2 * TileType.TILE_SIZE || y > Gdx.graphics.getHeight())
             return true;
 
         for (int row = (int) (y / TileType.TILE_SIZE); row < Math.ceil((y + height) / TileType.TILE_SIZE); row++) {
@@ -117,9 +117,10 @@ public abstract class GameMap {
             return false;
         else {
             for (Entity obstacle : obstacles) {
-                Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth()/2,
-                        obstacle.getY() + obstacle.getHeight()/2, obstacle.getWidth()/2*0.4f);
-                //System.out.println("overlaps" + stoneCircle.overlaps(mowerCircle));
+                Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth() / 2,
+                        obstacle.getY() + obstacle.getHeight() / 2,
+                        obstacle.getWidth() / 2 * EntityType.STONE.getScale());
+
                 if (stoneCircle.overlaps(mowerCircle)){
                     //delete touched stone and reduce mower health
                     obstacles.remove(obstacle);

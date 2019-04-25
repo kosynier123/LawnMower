@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bartz.game.LawnMowerGame;
 import com.bartz.game.world.CustomGameMap;
@@ -43,6 +44,7 @@ public class EndScreen extends ScreenAdapter {
 
         exitButton = new ImageButton(new TextureRegionDrawable(exitTexture));
         gameOverImage = new Image(new TextureRegionDrawable(gameOverTexture));
+        gameOverImage.setScaling(Scaling.stretch);
 
         table = new Table();
         table.setFillParent(true);
@@ -54,7 +56,8 @@ public class EndScreen extends ScreenAdapter {
         table.row();
 
         exitButton.setBounds(Gdx.graphics.getWidth() / 2 - exitTexture.getWidth()/ 2,
-                Gdx.graphics.getHeight() / 2 - exitTexture.getHeight() / 2, exitTexture.getWidth(), exitTexture.getHeight());
+                Gdx.graphics.getHeight() / 2 - exitTexture.getHeight() / 2,
+                exitTexture.getWidth(), exitTexture.getHeight());
     }
 
 

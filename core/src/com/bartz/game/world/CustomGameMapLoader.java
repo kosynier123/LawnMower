@@ -8,24 +8,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CustomGameMapLoader {
-    private static Json json = new Json();
+    //private static Json json = new Json();
     private static final int SIZE_X = Gdx.graphics.getWidth()/ TileType.TILE_SIZE + 1 ;
     private static final int SIZE_Y = Gdx.graphics.getHeight()/ TileType.TILE_SIZE + 1;
 
     public static CustomGameMapData loadMap (String id, String name) {
-        Gdx.files.local("maps/").file().mkdirs();
-        FileHandle file = Gdx.files.local("maps/" + id + ".map");
-        if (file.exists()) {
-            CustomGameMapData data = json.fromJson(CustomGameMapData.class, file.readString());
-            return data;
-        } else {
             CustomGameMapData data = generateRandomMap(id, name);
-            saveMap(data.id, data.name, data.map);
+            //saveMap(data.id, data.name, data.map);
             return data;
-        }
     }
 
-    public static void saveMap(String id, String name, int[][][] map) {
+    /*public static void saveMap(String id, String name, int[][][] map) {
         CustomGameMapData data = new CustomGameMapData();
         data.id = id;
         data.name = name;
@@ -34,7 +27,7 @@ public class CustomGameMapLoader {
         Gdx.files.local("maps/").file().mkdirs();
         FileHandle file = Gdx.files.local("maps/" + id + ".map");
         file.writeString(json.prettyPrint(data), false);
-    }
+    }*/
 
     public static CustomGameMapData generateRandomMap (String id, String name) {
         CustomGameMapData mapData = new CustomGameMapData();
@@ -53,8 +46,8 @@ public class CustomGameMapLoader {
                     mapData.map[0][row][col] = TileType.UNCUT_GRASS_BRIGHT.getId();
                 }
                 //set not fully visible cells to be unreachable by player
-                if (row == 0 || row == 1 || row == 2 || col == SIZE_X - 1) {
-                    mapData.map[1][row][col] = TileType.PATH.getId();
+                if (row == 0 || col == SIZE_X - 1) {
+                    mapData.map[0][row][col] = TileType.PATH.getId();
                 }
 
             }

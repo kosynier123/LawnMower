@@ -1,14 +1,8 @@
 package com.bartz.game.entities;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Array;
-import com.bartz.game.world.CustomGameMap;
 import com.bartz.game.world.GameMap;
-import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 public abstract class Entity {
 
