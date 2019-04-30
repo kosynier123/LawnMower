@@ -79,6 +79,10 @@ public class EndScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+
+
+
+
         exitButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new MenuScreen(game, camera));

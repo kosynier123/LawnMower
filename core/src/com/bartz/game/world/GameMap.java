@@ -22,6 +22,7 @@ public abstract class GameMap {
     private SpriteBatch batch;
     private int completionPercent;
     private Intersector intersector;
+    private boolean collisionCirclesVisible;
 
     public GameMap(){
         obstacles = new ArrayList<Entity>();
@@ -89,19 +90,21 @@ public abstract class GameMap {
      * @return true if obstacles are overlaping
      */
     public boolean doesObstacleCollideWithObstacle(Circle obstacleCircle) {
+        Circle mowerCircle = new Circle(player.getCircleMowerX(), player.getCircleMowerY(), player.getCircleMowerR() * 4);
         if (obstacles.size() == 0)
             return false;
 
         //ensure that it won't generate at starting position of mower
-        else if (intersector.overlaps(obstacleCircle, new Rectangle(player.getX(), player.getY(),
-                player.getX() + player.getWidth(), player.getY() + player.getHeight())))
-            return true;
+        else if (mowerCircle.overlaps(obstacleCircle)){
+                System.out.println("row - collide with mower");
+                return true;}
         else {
             for (Entity obstacle : obstacles) {
                 Circle stoneCircle = new Circle(obstacle.getX() + obstacle.getWidth() / 2,
                         obstacle.getY() + obstacle.getHeight() / 2,
                         obstacle.getWidth() / 2 * EntityType.STONE.getScale());
                 if (stoneCircle.overlaps(obstacleCircle)){
+                    System.out.println("row - collide with obstacle");
                     return true;}
             }
         } return false;
@@ -145,7 +148,10 @@ public abstract class GameMap {
     public abstract int getLayers();
     public abstract void countCutableTiles();
     public abstract int getNrOfCutableTiles();
-
+    public abstract boolean isCollisionCirclesVisible();
+    public abstract void setCollisionCirclesVisible(boolean collisionCirclesVisible);
+    public abstract void setStartText(boolean startText);
+    public abstract void setMinNrOfStones(int minNrOfStones);
     public Player getPlayer() {
         return player;
     }

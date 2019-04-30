@@ -11,10 +11,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.bartz.game.entities.Entity;
 import com.bartz.game.entities.EntityType;
 import com.bartz.game.entities.Player;
 import com.bartz.game.entities.obstacles.Stone;
+import com.bartz.game.fonts.FontType;
 
 import java.util.Random;
 
@@ -23,12 +25,11 @@ public class CustomGameMap extends GameMap {
     String id;
     String name;
     int[][][] map;
-    private int nrOfStones;
-    private int nrOfCutableTiles;
+    private int nrOfStones, minNrOfStones, nrOfCutableTiles;
     private Integer nrOfCutTilesAtBeginning;
+    private boolean collisionCirclesVisible, startText;
     FreeTypeFontGenerator generator;
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter, parameterLife;
-    BitmapFont font, fontLife;
+    BitmapFont font, fontLife, fontStart;
 
     private TextureRegion[][] tiles;
 
@@ -38,30 +39,24 @@ public class CustomGameMap extends GameMap {
         this.name = data.name;
         this.map = data.map;
         generator = new FreeTypeFontGenerator(Gdx.files.internal("VT323-Regular.ttf"));
-        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameterLife = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        parameter.size = 90;
-        parameter.borderWidth = 10;
-        parameter.borderColor = Color.BLACK;
-        parameter.color = Color.FIREBRICK;
+        startText = true;
 
-        parameterLife.size = 90;
-        parameterLife.borderWidth = 10;
-        parameterLife.borderColor = Color.BLACK;
-        parameterLife.color = Color.CHARTREUSE;
+        //initialize fonts
+        font = generator.generateFont(FontType.PROGRESS_FONT.getParameter());
+        fontLife = generator.generateFont(FontType.LIFE_FONT.getParameter());
+        fontStart = generator.generateFont(FontType.START_FONT.getParameter());
 
-        font = generator.generateFont(parameter);
-        fontLife = generator.generateFont(parameterLife);
         tiles = TextureRegion.split(new Texture("textures.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
         Random random = new Random();
-        //player = new Player(Gdx.graphics.getWidth() / 2 - 75 - EntityType.PLAYER.getWidth() * EntityType.PLAYER.getScale() / 2,
-          //      Gdx.graphics.getHeight() / 2 - 75 - EntityType.PLAYER.getHeight() * EntityType.PLAYER.getScale() / 2 ,this);
-        System.out.println("width " + getWidth() + " " + getHeight());
+        /*player = new Player(Gdx.graphics.getWidth() / 2 - 75 - EntityType.PLAYER.getWidth() * EntityType.PLAYER.getScale() / 2,
+             Gdx.graphics.getHeight() / 2 - 75 - EntityType.PLAYER.getHeight() * EntityType.PLAYER.getScale() / 2 ,this);
+        System.out.println("width " + getWidth() + " " + getHeight());*/
         player = new Player((getWidth()/2 - 2) * TileType.TILE_SIZE, (getHeight() / 2 - 2)  * TileType.TILE_SIZE, this);
 
-        //nr of stones - at least 4
-        nrOfStones = random.nextInt(10) + 4;
+        //nr of stones - at least 8
+        nrOfStones = random.nextInt(20) + 8;
+        System.out.println("nrOf " + nrOfStones + " minNr " + minNrOfStones);
         generateStones(nrOfStones);
         countCutableTiles();
     }
@@ -82,6 +77,9 @@ public class CustomGameMap extends GameMap {
             }
         }
         super.render(camera, batch);
+        if (startText) {
+            fontStart.draw(batch, "Click anywhere to start the game",  25, Gdx.graphics.getHeight()/2);
+        }
         font.draw(batch, "Progress: ", 80, Gdx.graphics.getHeight() - 50);
         font.draw(batch, String.valueOf(getCompletionPercent()) + "%", 500, Gdx.graphics.getHeight()-50);
         fontLife.draw(batch, "Life: ", 730, Gdx.graphics.getHeight() - 50);
@@ -89,9 +87,7 @@ public class CustomGameMap extends GameMap {
         batch.end();
 
         // show collision circles for mower and stones
-        showDebugCircles(true);
-
-
+        showDebugCircles(collisionCirclesVisible);
     }
 
     @Override
@@ -178,7 +174,8 @@ public class CustomGameMap extends GameMap {
                 // ensure to fit stones fully visible
                 int col = random.nextInt(getWidth() - 2);
                 //if (col == 0) col = 1;
-                int row = random.nextInt(getHeight() - 4);
+                int row = random.nextInt(getHeight() - 3);
+                System.out.println("row " + row + " column " + col);
                 //if (row == 0 || row == 1 || row == 2 ) row = 2;
                 stone = new Stone(col * TileType.TILE_SIZE, row * TileType.TILE_SIZE, this, true);
                 stoneCircle =  new Circle(stone.getX() + stone.getWidth() / 2,
@@ -203,6 +200,8 @@ public class CustomGameMap extends GameMap {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0, 1, 0, 0.5f);
             shapeRenderer.circle(player.getCircleMowerX(), player.getCircleMowerY(), player.getCircleMowerR());
+            //starting circle
+            shapeRenderer.circle(player.getCircleMowerX(), player.getCircleMowerY(), player.getCircleMowerR() * 4);
             shapeRenderer.end();
             //render collision circle for stones
             for (Entity obstacle : obstacles) {
@@ -212,8 +211,6 @@ public class CustomGameMap extends GameMap {
                         obstacle.getHeight() * EntityType.STONE.getScale() / 2);
                 shapeRenderer.end();
             }
-
-
         }
     }
 
@@ -221,4 +218,22 @@ public class CustomGameMap extends GameMap {
     public int getCompletionPercent() {
         return (int)(100 - Math.floor(getNrOfCutableTiles()) / nrOfCutTilesAtBeginning * 100);
     }
+
+    @Override
+    public boolean isCollisionCirclesVisible() {
+        return false;
+    }
+
+    @Override
+    public void setCollisionCirclesVisible(boolean collisionCirclesVisible) {
+        this.collisionCirclesVisible = collisionCirclesVisible;
+    }
+
+    @Override
+    public void setStartText(boolean startText){
+        this.startText = startText;
+    }
+
+    @Override
+    public void setMinNrOfStones(int minNrOfStones) {this.minNrOfStones = minNrOfStones;}
 }

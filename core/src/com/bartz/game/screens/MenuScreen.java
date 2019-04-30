@@ -82,7 +82,6 @@ public class MenuScreen implements Screen{
                 Gdx.graphics.getHeight() / 2 - exitTexture.getHeight() / 2, exitTexture.getWidth(), exitTexture.getHeight());
     }
 
-
     @Override
     public void render(float deltaTime){
         batch.begin();
@@ -107,6 +106,9 @@ public class MenuScreen implements Screen{
 
     @Override
     public void show() {
+        //prevent closing application on back key pressing
+        Gdx.input.setCatchBackKey(true);
+
         startButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new GameScreen(game, camera));
@@ -116,7 +118,7 @@ public class MenuScreen implements Screen{
 
         optionsButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                //game.setScreen(new WinScreen(game, camera));
+                //game.setScreen(new OptionsScreen(game, camera));
                 return true;
             }
         });

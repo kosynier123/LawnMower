@@ -1,10 +1,6 @@
 package com.bartz.game.world;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 public class CustomGameMapLoader {
@@ -14,20 +10,9 @@ public class CustomGameMapLoader {
 
     public static CustomGameMapData loadMap (String id, String name) {
             CustomGameMapData data = generateRandomMap(id, name);
-            //saveMap(data.id, data.name, data.map);
             return data;
     }
 
-    /*public static void saveMap(String id, String name, int[][][] map) {
-        CustomGameMapData data = new CustomGameMapData();
-        data.id = id;
-        data.name = name;
-        data.map = map;
-
-        Gdx.files.local("maps/").file().mkdirs();
-        FileHandle file = Gdx.files.local("maps/" + id + ".map");
-        file.writeString(json.prettyPrint(data), false);
-    }*/
 
     public static CustomGameMapData generateRandomMap (String id, String name) {
         CustomGameMapData mapData = new CustomGameMapData();
