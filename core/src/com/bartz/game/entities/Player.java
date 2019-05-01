@@ -11,7 +11,7 @@ public class Player extends Entity {
     private Sprite sprite;
     private Texture image;
     private static final int SPEED = 100;
-    private float amountX, amountY, myDegrees, startPosX, startPosY;
+    private float amountX, amountY, myDegrees, startPosX, startPosY, fuel;
     private int health;
     private Circle circleMower;
 
@@ -20,6 +20,8 @@ public class Player extends Entity {
 
         image = new Texture("mower.png");
         sprite = new Sprite(image, getWidth(), getHeight());
+        health = 4;
+        fuel = 100;
 
         // set the center of rotation to be at center of cutting circle
         sprite.setOrigin(210f, 104f);
@@ -37,7 +39,6 @@ public class Player extends Entity {
         circleMower = new Circle(pos.x + sprite.getOriginX(), pos.y + sprite.getOriginY(),
                 0.8f * sprite.getHeight()* EntityType.PLAYER.getScale() / 2);
 
-        health = 4;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class Player extends Entity {
         amountY = getCalibratedAmountY(newAccY);
         //System.out.println("starting " + startPosY + " current " + newAccY + " am y " + amountY);
 
-        // delete noises
+        // reduce noise
         if (Math.abs(amountX) > 1 || Math.abs(amountY) > 1)
             move(amountX, amountY);
         //System.out.println("amout x " + amountX + " " + amountY);
@@ -115,8 +116,13 @@ public class Player extends Entity {
         return health;
     }
 
-    public Circle getCircleMower() {
-        return circleMower;
+    public float getFuel(float time) {
+        fuel -= time;
+        return fuel;
+    }
+
+    public float getFuel() {
+        return fuel;
     }
 
     private float getCalibratedAmountY(float newAccY){

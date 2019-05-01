@@ -25,11 +25,12 @@ public class CustomGameMap extends GameMap {
     String id;
     String name;
     int[][][] map;
-    private int nrOfStones, minNrOfStones, nrOfCutableTiles;
+    private int nrOfStones, nrOfCutableTiles;
     private Integer nrOfCutTilesAtBeginning;
-    private boolean collisionCirclesVisible, startText;
+    private boolean collisionCirclesVisible, startText, collision;
     FreeTypeFontGenerator generator;
-    BitmapFont font, fontLife, fontStart;
+    BitmapFont font, fontLife, fontStart, fontFuel;
+    float time, timeChange;
 
     private TextureRegion[][] tiles;
 
@@ -46,6 +47,8 @@ public class CustomGameMap extends GameMap {
         font = generator.generateFont(FontType.PROGRESS_FONT.getParameter());
         fontLife = generator.generateFont(FontType.LIFE_FONT.getParameter());
         fontStart = generator.generateFont(FontType.START_FONT.getParameter());
+        fontFuel = generator.generateFont(FontType.FUEL_FONT.getParameter());
+
 
         tiles = TextureRegion.split(new Texture("textures.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
         Random random = new Random();
@@ -56,7 +59,7 @@ public class CustomGameMap extends GameMap {
 
         //nr of stones - at least 8
         nrOfStones = random.nextInt(20) + 8;
-        System.out.println("nrOf " + nrOfStones + " minNr " + minNrOfStones);
+
         generateStones(nrOfStones);
         countCutableTiles();
     }
@@ -65,6 +68,18 @@ public class CustomGameMap extends GameMap {
     public void render(OrthographicCamera camera, SpriteBatch batch) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+
+        // on collision change color
+        if (collision){
+            batch.setColor(255,0,0,0.5f);
+            time += Gdx.graphics.getRawDeltaTime();
+            System.out.println("as" + Gdx.graphics.getRawDeltaTime());
+            }
+            if (time >= 0.3f) {
+                collision = false;
+                batch.setColor(255, 255, 255, 1);
+                time = 0;
+            }
 
         for (int layer = 0; layer < getLayers(); layer++) {
             for (int row = 0; row < getHeight(); row++) {
@@ -79,11 +94,15 @@ public class CustomGameMap extends GameMap {
         super.render(camera, batch);
         if (startText) {
             fontStart.draw(batch, "Click anywhere to start the game",  25, Gdx.graphics.getHeight()/2);
+        } else {
+            timeChange = Gdx.graphics.getRawDeltaTime();
         }
         font.draw(batch, "Progress: ", 80, Gdx.graphics.getHeight() - 50);
         font.draw(batch, String.valueOf(getCompletionPercent()) + "%", 500, Gdx.graphics.getHeight()-50);
         fontLife.draw(batch, "Life: ", 730, Gdx.graphics.getHeight() - 50);
         fontLife.draw(batch, String.valueOf(player.getHealth()), 960, Gdx.graphics.getHeight()-50);
+        fontFuel.draw(batch, "Fuel: ", Gdx.graphics.getWidth() / 2 - 220, 100);
+        fontFuel.draw(batch,String.valueOf((int) Math.ceil(player.getFuel(timeChange))),Gdx.graphics.getWidth() / 2 + 70, 100);
         batch.end();
 
         // show collision circles for mower and stones
@@ -91,13 +110,8 @@ public class CustomGameMap extends GameMap {
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
-    }
-
-    @Override
     public void dispose() {
-        generator.dispose(); // don't forget to dispose to avoid memory leaks!
+        generator.dispose();
 
     }
 
@@ -235,5 +249,7 @@ public class CustomGameMap extends GameMap {
     }
 
     @Override
-    public void setMinNrOfStones(int minNrOfStones) {this.minNrOfStones = minNrOfStones;}
+    public void setCollision(boolean collision) {
+        this.collision = collision;
+    }
 }

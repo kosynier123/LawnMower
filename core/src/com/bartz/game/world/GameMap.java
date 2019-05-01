@@ -21,13 +21,11 @@ public abstract class GameMap {
     ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private int completionPercent;
-    private Intersector intersector;
     private boolean collisionCirclesVisible;
 
     public GameMap(){
         obstacles = new ArrayList<Entity>();
         shapeRenderer = new ShapeRenderer();
-        intersector = new Intersector();
     }
 
     public void render(OrthographicCamera cam, SpriteBatch batch){
@@ -127,6 +125,7 @@ public abstract class GameMap {
                 if (stoneCircle.overlaps(mowerCircle)){
                     //delete touched stone and reduce mower health
                     obstacles.remove(obstacle);
+                    setCollision(true);
                     player.reduceHealth();
                     return true;}
                 }
@@ -151,7 +150,7 @@ public abstract class GameMap {
     public abstract boolean isCollisionCirclesVisible();
     public abstract void setCollisionCirclesVisible(boolean collisionCirclesVisible);
     public abstract void setStartText(boolean startText);
-    public abstract void setMinNrOfStones(int minNrOfStones);
+    public abstract void setCollision(boolean collision);
     public Player getPlayer() {
         return player;
     }

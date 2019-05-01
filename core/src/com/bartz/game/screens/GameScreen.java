@@ -48,26 +48,24 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        //gameMap.update(Gdx.graphics.getDeltaTime());
         gameMap.render(camera, batch);
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            game.setScreen(new MenuScreen(game, camera));
-        }
-
 
         if (Gdx.input.isTouched())
             clicked = true;
         if (clicked) {
             gameMap.setStartText(false);
             gameMap.update(Gdx.graphics.getDeltaTime());
-            if (gameMap.getPlayer().getHealth() == 0)
+            if (gameMap.getPlayer().getHealth() == 0 || gameMap.getPlayer().getFuel() <= 0 )
                 game.setScreen(new EndScreen(game, camera));
-            else if (gameMap.getCompletionPercent() >= 10)
+            else if (gameMap.getCompletionPercent() >= 51)
                 game.setScreen(new WinScreen(game, camera));
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            game.setScreen(new MenuScreen(game, camera));
+        }
     }
+
     @Override
     public void hide() {
         dispose();

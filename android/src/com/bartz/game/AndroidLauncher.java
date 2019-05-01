@@ -12,4 +12,9 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new LawnMowerGame(), config);
 	}
+
+	@Override
+	protected void createWakeLock(boolean use) {
+		use=true; super.createWakeLock(use); }
+
 }
